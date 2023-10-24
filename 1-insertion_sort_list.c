@@ -1,58 +1,41 @@
 #include "sort.h"
-
 /**
- * insertion_sort_list - Sorts a doubly linked list.
- *   
- * @list: A pointer to the head of the doubly linked list.
+ * insertion_sort_list - The algorithm for the insertion sort.
+ * @list : Pointer to Pointer to head of doubly linked list.
+ * Return: Void.
  */
 void insertion_sort_list(listint_t **list)
 {
-    if (list == NULL || *list == NULL || (*list)->next == NULL)
-        return;
+	listint_t *p, *tmp_next, *tmp_prev, *tmp, *pp;
 
-    listint_t *sorted = NULL, *current = *list;
-
-    while (current != NULL)
-    {
-        listint_t *next = current->next;
-        listint_t *currentNode = current;
-
-        if (sorted == NULL || sorted->n >= currentNode->n)
-        {
-            currentNode->next = sorted;
-            currentNode->prev = NULL;
-
-            if (sorted != NULL)
-                sorted->prev = currentNode;
-
-            sorted = currentNode;
-        }
-        else
-        {
-            listint_t *temp = sorted;
-
-            while (temp != NULL && temp->n < currentNode->n)
-                temp = temp->next;
-
-            currentNode->next = temp;
-            currentNode->prev = temp ? temp->prev : NULL;
-
-            if (currentNode->prev != NULL)
-                currentNode->prev->next = currentNode;
-
-            if (temp != NULL)
-                temp->prev = currentNode;
-
-            if (temp == sorted)
-                sorted = currentNode;
-        }
-
-        current = next;
-
-        if (current != NULL)
-            current->prev = NULL;
-
-        *list = sorted;
-        print_list(*list);
-    }
+	if (list == NULL || *list == NULL)
+		return;
+	tmp = *list;
+	while (tmp != NULL)
+	{
+		p = (*tmp).p;
+		while (p != NULL)
+		{
+			if ((*tmp).n < (*p).n)
+			{
+				tmp_next = (*tmp).next;
+				tmp_prev = (*tmp).p;
+				(*tmp).next = p;
+				pp = (*p).p;
+				if (pp == NULL)
+					*list = tmp;
+				else
+					(*pp).next = tmp;
+				(*tmp).p = pp;
+				(*p).p = tmp;
+				if (tmp_next != NULL)
+					(*tmp_next).p = tmp_prev;
+				(*tmp_prev).next = tmp_next;
+				print_list(*list);
+			}
+			p = (*p).p;
+		}
+		tmp = (*tmp).next;
+	}
 }
+
